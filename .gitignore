@@ -1,0 +1,19 @@
+# Diretórios de build
+/target/
+
+# Dependências do Maven
+/.m2/
+
+# Arquivos de configuração de IDEs
+.idea/
+.vscode/
+
+# Arquivos de configuração do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivo de variáveis de ambiente
+.env
+
+# Arquivos de log
+*.log
