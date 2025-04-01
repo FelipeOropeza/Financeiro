@@ -1,8 +1,12 @@
 package com.financeiro;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+import com.financeiro.screen.FormCad;
 
 public class Main extends JFrame {
 
@@ -12,27 +16,30 @@ public class Main extends JFrame {
         setSize(415, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        JButton btnCadastro = new JButton("Cadastro");
+        btnCadastro.setBounds(0, 0, 200, 30);
+        add(btnCadastro);
+
         JButton btnSair = new JButton("Sair");
         btnSair.setBounds(200, 0, 200, 30);
         add(btnSair);
 
-        btnSair.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
+        btnSair.addActionListener((ActionEvent e) -> {
+            System.exit(0);
+        });
+
+        btnCadastro.addActionListener((var e) -> {
+            new FormCad().setVisible(true);
+            dispose();
         });
 
         setLocationRelativeTo(null);
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Main menu = new Main();
-                menu.setVisible(true);
-            }
+        SwingUtilities.invokeLater(() -> {
+            Main menu = new Main();
+            menu.setVisible(true);
         });
     }
 }
