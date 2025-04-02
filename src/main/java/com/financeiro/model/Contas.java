@@ -13,6 +13,12 @@ public class Contas {
         this.tipoConta = tipoConta;
     }
 
+    public Contas(String nome, double valor, boolean tipoConta) {
+        this.nome = nome;
+        this.valor = valor;
+        this.tipoConta = tipoConta;
+    }
+
     public int getId(){
         return id;
     }
