@@ -8,6 +8,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.financeiro.model.Contas;
+import com.financeiro.service.ContaService;
+
 public class FormCad extends JFrame {
     private final JTextField txtNome;
     private final JTextField txtValor;
@@ -40,7 +43,7 @@ public class FormCad extends JFrame {
         lblTipoConta.setBounds(20, 130, 100, 20);
         add(lblTipoConta);
 
-        cmbTipoConta = new JComboBox<>(new String[] {"Entrada", "Saída"});
+        cmbTipoConta = new JComboBox<>(new String[] { "Entrada", "Saída" });
         cmbTipoConta.setBounds(120, 130, 230, 25);
         add(cmbTipoConta);
 
@@ -64,14 +67,18 @@ public class FormCad extends JFrame {
             return;
         }
 
-        boolean tipoConta = cmbTipoConta.getSelectedIndex() == 0; 
+        boolean tipoConta = cmbTipoConta.getSelectedIndex() == 0;
 
-        JOptionPane.showMessageDialog(this, """
-                                            Conta cadastrada com sucesso!
-                                            Nome: """ + nome + "\n" +
-                "Valor: R$ " + valor + "\n" +
-                "Tipo de Conta: " + (tipoConta ? "Entrada" : "Saída"));
-        
+        Contas contas = new Contas(nome, valor, tipoConta);
+
+        boolean result = ContaService.insertConta(contas);
+
+        if (result) {
+            JOptionPane.showMessageDialog(this, "A conta foi inserida com sucesso");
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao inserir a conta. Tente novamente.");
+        }
+
         txtNome.setText("");
         txtValor.setText("");
         cmbTipoConta.setSelectedIndex(0);
