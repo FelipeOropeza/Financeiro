@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.financeiro.Main;
 import com.financeiro.model.Contas;
 import com.financeiro.service.ContaService;
 
@@ -53,6 +54,12 @@ public class FormCad extends JFrame {
 
         btnCadastrar.addActionListener(e -> cadastrarConta());
 
+        JButton btnVoltar = new JButton("Voltar para Menu");
+        btnVoltar.setBounds(100, 220, 200, 30);
+        add(btnVoltar);
+
+        btnVoltar.addActionListener(e -> voltarParaMenu());
+
         setLocationRelativeTo(null);
     }
 
@@ -82,6 +89,11 @@ public class FormCad extends JFrame {
         txtNome.setText("");
         txtValor.setText("");
         cmbTipoConta.setSelectedIndex(0);
+    }
+
+    private void voltarParaMenu() {
+        new Main().setVisible(true);
+        dispose();
     }
 
     public static void main(String[] args) {
