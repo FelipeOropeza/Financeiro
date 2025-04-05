@@ -18,6 +18,8 @@ import com.financeiro.service.ContaService;
 public class Main extends JFrame {
 
     private final JList<String> listaContas;
+    private DefaultListModel<String> model;
+    private List<Contas> contas;
 
     public Main() {
         setTitle("Menu Principal");
@@ -39,16 +41,8 @@ public class Main extends JFrame {
             dispose();
         });
 
-        // Obtém a lista de contas
-        List<Contas> contas = ContaService.selectContas();
-        DefaultListModel<String> model = new DefaultListModel<>();
-
-        for (Contas conta : contas) {
-            String contaInfo = String.format("ID: %d - Nome: %s - Valor: R$ %.2f - Tipo: %s",
-                    conta.getId(), conta.getNome(), conta.getValor(),
-                    conta.getTipoConta() ? "Entrada" : "Saída");
-            model.addElement(contaInfo);
-        }
+        // Carregar contas
+        carregarContas();
 
         listaContas = new JList<>(model);
         listaContas.setBounds(0, 50, 500, 300);
@@ -74,8 +68,24 @@ public class Main extends JFrame {
 
                     if (escolha == 0) {
                         System.err.println("Atualizar");
+                        // Aqui, você pode adicionar o código para atualizar a conta
                     } else if (escolha == 1) {
-                        System.err.println("Deletar");
+                        int resposta = JOptionPane.showConfirmDialog(
+                                null,
+                                "Tem certeza que deseja excluir a conta ID: " + idConta + "?",
+                                "Confirmar Exclusão",
+                                JOptionPane.YES_NO_OPTION);
+
+                        if (resposta == JOptionPane.YES_OPTION) {
+                            boolean result = ContaService.deleteConta(idConta);
+                            if (result) {
+                                JOptionPane.showMessageDialog(null, "A conta foi deletada com sucesso");
+                                carregarContas();
+                                listaContas.setModel(model);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Erro ao deletar a conta. Tente novamente.");
+                            }
+                        }
                     }
                 }
             }
@@ -83,6 +93,18 @@ public class Main extends JFrame {
 
         add(listaContas);
         setLocationRelativeTo(null);
+    }
+
+    private void carregarContas() {
+        contas = ContaService.selectContas();
+        model = new DefaultListModel<>();
+        
+        for (Contas conta : contas) {
+            String contaInfo = String.format("ID: %d - Nome: %s - Valor: R$ %.2f - Tipo: %s",
+                    conta.getId(), conta.getNome(), conta.getValor(),
+                    conta.getTipoConta() ? "Entrada" : "Saída");
+            model.addElement(contaInfo);
+        }
     }
 
     public static void main(String[] args) {
