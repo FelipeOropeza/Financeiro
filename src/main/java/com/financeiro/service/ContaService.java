@@ -49,4 +49,21 @@ public class ContaService {
 
         return contas;
     }
+
+    public static boolean deleteConta(int id){
+        try (Connection connection = Conexao.connect()) {
+
+            String sql = "DELETE from contas WHERE id = ?";
+
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setInt(1, id);
+
+                pstmt.execute();
+                return true;
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao deleta usuario: " + e.getMessage());
+            return false;
+        }
+    }
 }
