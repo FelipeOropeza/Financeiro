@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import com.financeiro.model.Contas;
+import com.financeiro.screen.FormAtualizarConta;
 import com.financeiro.screen.FormCad;
 import com.financeiro.service.ContaService;
 
@@ -67,8 +68,8 @@ public class Main extends JFrame {
                             options[0]);
 
                     if (escolha == 0) {
-                        System.err.println("Atualizar");
-                        // Aqui, você pode adicionar o código para atualizar a conta
+                        FormAtualizarConta formAtualizarConta = new FormAtualizarConta(contaSelecionada);
+                        formAtualizarConta.setVisible(true);
                     } else if (escolha == 1) {
                         int resposta = JOptionPane.showConfirmDialog(
                                 null,
