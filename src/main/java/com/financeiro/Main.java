@@ -18,8 +18,8 @@ import com.financeiro.service.ContaService;
 
 public class Main extends JFrame {
 
-    private final JList<String> listaContas;
-    private DefaultListModel<String> model;
+    public final JList<String> listaContas;
+    public DefaultListModel<String> model;
     private List<Contas> contas;
 
     public Main() {
@@ -42,7 +42,6 @@ public class Main extends JFrame {
             dispose();
         });
 
-        // Carregar contas
         carregarContas();
 
         listaContas = new JList<>(model);
@@ -68,8 +67,10 @@ public class Main extends JFrame {
                             options[0]);
 
                     if (escolha == 0) {
-                        FormAtualizarConta formAtualizarConta = new FormAtualizarConta(contaSelecionada);
+                        FormAtualizarConta formAtualizarConta = new FormAtualizarConta(contaSelecionada, Main.this);
                         formAtualizarConta.setVisible(true);
+                        carregarContas();
+                        listaContas.setModel(model);
                     } else if (escolha == 1) {
                         int resposta = JOptionPane.showConfirmDialog(
                                 null,
@@ -96,7 +97,7 @@ public class Main extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private void carregarContas() {
+    public void carregarContas() {
         contas = ContaService.selectContas();
         model = new DefaultListModel<>();
         

@@ -8,16 +8,21 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.financeiro.Main;
 import com.financeiro.model.Contas;
+import com.financeiro.service.ContaService;
 
 public class FormAtualizarConta extends JFrame {
     private final JTextField txtNome;
     private final JTextField txtValor;
     private final JComboBox<String> cmbTipoConta;
     private final Contas conta;
+    private final Main mainWindow;
 
-    public FormAtualizarConta(Contas conta) {
+    public FormAtualizarConta(Contas conta, Main mainWindow) {
         this.conta = conta;
+        this.mainWindow = mainWindow;
+
         setTitle("Atualizar Conta");
 
         setLayout(null);
@@ -81,13 +86,15 @@ public class FormAtualizarConta extends JFrame {
         conta.setValor(valor);
         conta.setTipoConta(tipoConta);
 
-        // boolean result = ContaService.atualizarConta(conta);
+        boolean result = ContaService.atualizarConta(conta);
 
-        // if (result) {
-        //     JOptionPane.showMessageDialog(this, "Conta atualizada com sucesso");
-        // } else {
-        //     JOptionPane.showMessageDialog(this, "Erro ao atualizar a conta. Tente novamente.");
-        // }
+        if (result) {
+            JOptionPane.showMessageDialog(this, "Conta atualizada com sucesso");
+            mainWindow.carregarContas();
+            mainWindow.listaContas.setModel(mainWindow.model);
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar a conta. Tente novamente.");
+        }
 
         dispose();
     }
@@ -100,11 +107,13 @@ public class FormAtualizarConta extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JOptionPane.showMessageDialog(null, "Entrou no método main");
-            Contas conta = new Contas("Conta Exemplo", 100.0, true);
-            FormAtualizarConta formAtualizarConta = new FormAtualizarConta(conta);
-            formAtualizarConta.setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Contas conta = new Contas("Conta Exemplo", 100.0, true);
+                var formAtualizarConta = new FormAtualizarConta(conta, null);
+                formAtualizarConta.setVisible(true);
+            }
         });
     }
     
