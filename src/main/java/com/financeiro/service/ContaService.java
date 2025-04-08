@@ -49,6 +49,26 @@ public class ContaService {
 
         return contas;
     }
+    
+    public static boolean atualizarConta(Contas conta){
+        try (Connection connection = Conexao.connect()) {
+
+            String sql = "UPDATE contas SET nome = ?, valor = ?, tipoconta = ? WHERE id = ?";
+
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, conta.getNome());
+                pstmt.setDouble(2, conta.getValor());
+                pstmt.setBoolean(3, conta.getTipoConta());
+                pstmt.setInt(4, conta.getId());
+
+                pstmt.execute();
+                return true;
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao deleta usuario: " + e.getMessage());
+            return false;
+        }
+    }
 
     public static boolean deleteConta(int id){
         try (Connection connection = Conexao.connect()) {
