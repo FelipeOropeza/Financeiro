@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -16,11 +17,12 @@ import com.financeiro.screen.FormAtualizarConta;
 import com.financeiro.screen.FormCad;
 import com.financeiro.service.ContaService;
 
-public class Main extends JFrame {
+public final class Main extends JFrame {
 
     public final JList<String> listaContas;
     public DefaultListModel<String> model;
     private List<Contas> contas;
+    private JLabel lblSaldo;
 
     public Main() {
         setTitle("Menu Principal");
@@ -36,6 +38,10 @@ public class Main extends JFrame {
         btnSair.setBounds(250, 0, 250, 30);
         add(btnSair);
 
+        lblSaldo = new JLabel("Saldo: R$ 0.00");
+        lblSaldo.setBounds(10, 35, 300, 20);
+        add(lblSaldo);
+
         btnSair.addActionListener(e -> System.exit(0));
         btnCadastro.addActionListener(e -> {
             new FormCad().setVisible(true);
@@ -45,8 +51,8 @@ public class Main extends JFrame {
         carregarContas();
 
         listaContas = new JList<>(model);
-        listaContas.setBounds(0, 50, 500, 300);
-
+        listaContas.setBounds(0, 60, 500, 300);
+        
         listaContas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -100,13 +106,16 @@ public class Main extends JFrame {
     public void carregarContas() {
         contas = ContaService.selectContas();
         model = new DefaultListModel<>();
-        
+
         for (Contas conta : contas) {
             String contaInfo = String.format("ID: %d - Nome: %s - Valor: R$ %.2f - Tipo: %s",
                     conta.getId(), conta.getNome(), conta.getValor(),
                     conta.getTipoConta() ? "Entrada" : "Saída");
             model.addElement(contaInfo);
         }
+
+        double saldo = ContaService.selectSumConta(); // esse método já tá certinho
+        lblSaldo.setText(String.format("Saldo: R$ %.2f", saldo));
     }
 
     public static void main(String[] args) {

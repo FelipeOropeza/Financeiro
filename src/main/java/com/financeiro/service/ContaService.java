@@ -31,16 +31,17 @@ public class ContaService {
         }
     }
 
-    public static List<Contas> selectContas(){
+    public static List<Contas> selectContas() {
         String sql = "SELECT * from contas";
         List<Contas> contas = new ArrayList<>();
 
         try (Connection connection = Conexao.connect();
-            PreparedStatement pstmt = connection.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()){
+                PreparedStatement pstmt = connection.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                Contas conta = new Contas(rs.getInt("id"), rs.getString("nome"), rs.getDouble("valor"), rs.getBoolean("tipoconta"));
+                Contas conta = new Contas(rs.getInt("id"), rs.getString("nome"), rs.getDouble("valor"),
+                        rs.getBoolean("tipoconta"));
                 contas.add(conta);
             }
         } catch (SQLException e) {
@@ -49,8 +50,8 @@ public class ContaService {
 
         return contas;
     }
-    
-    public static boolean atualizarConta(Contas conta){
+
+    public static boolean atualizarConta(Contas conta) {
         try (Connection connection = Conexao.connect()) {
 
             String sql = "UPDATE contas SET nome = ?, valor = ?, tipoconta = ? WHERE id = ?";
@@ -70,7 +71,7 @@ public class ContaService {
         }
     }
 
-    public static boolean deleteConta(int id){
+    public static boolean deleteConta(int id) {
         try (Connection connection = Conexao.connect()) {
 
             String sql = "DELETE from contas WHERE id = ?";
@@ -85,5 +86,26 @@ public class ContaService {
             System.err.println("Erro ao deleta usuario: " + e.getMessage());
             return false;
         }
+    }
+
+    public static double selectSumConta() {
+        String sql = "SELECT " +
+                "  SUM(CASE WHEN tipoconta = true THEN valor ELSE 0 END) - " +
+                "  SUM(CASE WHEN tipoconta = false THEN valor ELSE 0 END) AS saldo " +
+                "FROM contas;";
+        
+        try (Connection connection = Conexao.connect();
+             PreparedStatement pstmt = connection.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+    
+            if (rs.next()) {
+                return rs.getDouble("saldo");
+            }
+    
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar saldo: " + e.getMessage());
+        }
+    
+        return 0.0;
     }
 }
