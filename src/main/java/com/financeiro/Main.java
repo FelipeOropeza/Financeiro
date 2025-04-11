@@ -114,7 +114,7 @@ public final class Main extends JFrame {
             model.addElement(contaInfo);
         }
 
-        double saldo = ContaService.selectSumConta(); // esse método já tá certinho
+        double saldo = ContaService.selectSumConta();
         lblSaldo.setText(String.format("Saldo: R$ %.2f", saldo));
     }
 
